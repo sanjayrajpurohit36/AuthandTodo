@@ -1,0 +1,13 @@
+CRUD in node js
+USER signup
+User login
+user - field name, email, password
+after login can change own profile password update.
+
+todo list : add, edit, delete, list, status, update
+todo list field : date, titte, status
+
+
+DB - mysql
+Frontend - React JS
+backend - nodejs

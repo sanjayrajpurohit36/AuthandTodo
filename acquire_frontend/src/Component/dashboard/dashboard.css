@@ -1,0 +1,67 @@
+.user-dashboard-main-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.user-dashboard-container-wrapper {
+    background: #f8f9fa;
+    width: 100%;
+    height: 100%;
+}
+
+.user-dashboard-nav {
+    background: #212529;
+    height: 60px;
+    margin: 0px;
+    padding: 0px;
+    top: 0px;
+    z-index: 3333333;
+    overflow: hidden;
+    width: 100%;
+    color: white;
+}
+
+.user-dashboard-nav-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.btn {
+    text-align: right;
+}
+
+.btn-success {
+    width: 120px;
+    text-align: center;
+}
+
+.task-div {
+    text-align: center;
+}
+
+.tab {
+    text-align: center;
+    margin-top: 16px;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.tab button {
+    width: 120px;
+    text-align: center;
+}
+
+#task {
+    height: 120px;
+    width: 240px;
+}
+
+.user-margin{
+    margin-top: 20px;
+}
+
+.edit-task-container{
+    text-align: center;
+}
