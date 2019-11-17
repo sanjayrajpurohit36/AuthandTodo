@@ -31,26 +31,19 @@ module.exports = {
     login: (email, password, dbCon) => {
         return new Promise((resolve, reject) => {
             var getUserQuery = "SELECT * FROM users WHERE email = ? " ;
-            // console.log(getUserQuery);
             dbCon.query(getUserQuery, [email], function (err, user) {
-                console.log("user data", user[0]);
                 if (err) {
                     console.log("Invalid data(email)", err);
                     throw err;
                 }
-                else {
+                else if(user.length != 0) {
                     if (user && bcrypt.compareSync(password, user[0].password)) {
                         let token = tokenFile.generateToken(user[0]); // generating token
-                        // console.log("token created", token);
-
                         var updateQuery = "UPDATE users SET token = ? WHERE userId = ?";
                         dbCon.query(updateQuery, [token,user[0].userId],  function (err, result) {
                             if (err) {
                             console.log("err in inserting data", err);
                             throw err;
-                            }
-                            else if(result.Rows) {
-                                // resolve(result);
                             }
                         }) 
 
@@ -60,8 +53,8 @@ module.exports = {
                             "email": user[0].email
                         });
 
-                    } else reject("Invalid password!");
-                }
+                    } else reject("Incorrect credentials"); // if password doesn't match
+                } else reject("Incorrect credentials");     // if email doesn't exist in system
             })
         });
     },
@@ -70,13 +63,11 @@ module.exports = {
       return new Promise((resolve, reject) => {
         var updateQuery = "UPDATE users SET token = ? WHERE userId = ?";
         dbCon.query(updateQuery, ["",userId],  function (err, result) {
-            // console.log(result);
             if (err) {
             console.log("err in unsetting token data", err);
             throw err;
             }
             else if(result.changedRows) {
-                // console.log("token is un-set", result);
                 resolve({
                     status: "true",
                     message: "user is loggedOut"
@@ -144,10 +135,8 @@ module.exports = {
 
     find_by_token: (token, dbCon) => {
         return new Promise((resolve, reject) => {
-            // console.log("token in find by token", token)
             var getUserQuery = "SELECT * FROM users WHERE token = ? " ;
             dbCon.query(getUserQuery, [token], function (err, result) {
-                // console.log(err, result);
                 if (err) {
                     throw err;
                 }

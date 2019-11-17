@@ -28,7 +28,7 @@ class Login extends React.Component {
                     pathname: `/dashboard`
                 })
             }
-            if(nextProps.userData.status===false && nextProps.userData.message === "Invalid password!") {
+            if(nextProps.userData.status===false && nextProps.userData.message === "Incorrect credentials") {
                 this.setState({
                     showErr: true
                 })

@@ -26,11 +26,10 @@ module.exports = {
       .then(result => {
         res.send({
           status: true,
-          data:result
+          data: result
         });
       })
       .catch(message => {
-        console.log(message);
         res.status(200);
         res.send({
           status: false,
@@ -128,6 +127,7 @@ module.exports = {
         });
       });
   },
+
   // user delete function NIU(Not in use)
   delete: function(req, res) {
     var id = req.params.id;
