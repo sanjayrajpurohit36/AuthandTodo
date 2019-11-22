@@ -1,20 +1,18 @@
-const TodoRepository = require("../repositories/TodoRepository");
+const BucketRepository = require("../repositories/BucketRepository");
 
 module.exports = {
   create: function(req, res) {
-    // payload for creating todos
+    // payload for creating Bucket
     const payload = {
-        "text": req.body.text,
-        "status": req.body.status,
-        "bucketId": req.body.bucketId         
+        "bucketName": req.body.bucketName       
     } 
 
     const userId = req.user.id
-    TodoRepository.createTodo(payload, userId, req.app.db)
+    BucketRepository.createBucket(payload, userId, req.app.db)
       .then(result => {
         res.send({
             status: true,
-            message: "Todo item is created." 
+            message: "Bucket is created." 
         });
       })
       .catch(message => {
@@ -26,15 +24,17 @@ module.exports = {
       });
   },
 
-  getTodoList: function (req, res) {
+  getBucketData: function (req, res) { 
+
+  },
+
+
+  getBucketList: function (req, res) {
     const userId  = req.user.id;
-    const data = {
-      "bucketId" : req.params.bucketId
-    } 
     // const pageNo = req.params.pageNo;
     // const limit = req.params.limit
     // const from = pageNo * limit
-    TodoRepository.getTodo(data ,userId, req.app.db)
+    BucketRepository.getBucket(userId, req.app.db)
         .then(result => {
             res.send({
                 status: true,
@@ -51,10 +51,10 @@ module.exports = {
         })
   },
   
-  updateTodoList: function (req, res) {
+  updateBucket: function (req, res) {
     const userId = req.user.id; 
     const data =  {...req.body};
-    TodoRepository.updateTodo(data, userId ,req.app.db)
+    BucketRepository.updateBucket(data, userId ,req.app.db)
         .then(result => {
             res.send({
                 status: true,
@@ -71,21 +71,4 @@ module.exports = {
         })
   },
 
-  deleteTodoList: function(req, res) {
-    var userId = req.user.id;
-    var data = req.body.id;
-    TodoRepository.deleteTodo(data, userId, req.app.db)
-      .then(result => {
-        res.send({
-          status: true,
-          message: "todo Deleted"
-        });
-      })
-      .catch(message => {
-        res.send({
-          status: false,
-          message
-        });
-      });
-  }
 };

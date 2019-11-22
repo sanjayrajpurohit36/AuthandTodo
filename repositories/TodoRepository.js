@@ -2,24 +2,25 @@ const bcrypt = require("bcrypt-nodejs");
 const tokenFile = require("../config/verifyToken");
 
 module.exports = {
-  getTodo: (userId, dbCon) => {
+  getTodo: (data ,userId, dbCon) => {
     return new Promise((resolve, reject) => {
-        var getTodoQuery = "SELECT * FROM todo WHERE userId = ? ORDER BY created_at DESC" ;
-        dbCon.query(getTodoQuery, [userId], function (err, todo) {
-            if (err) {
-                console.log("Invalid data", err);
-                throw err;
-            }
-            else {
-                resolve(todo);
-            }
-        })
-    });
+      var getTodoQuery = "SELECT todo.text,todo.id,todo.status,bucket.bucketName FROM todo INNER JOIN bucket ON bucket.bucketId = todo.bucketId AND todo.bucketId = ?" ;
+      console.log(getTodoQuery);
+      dbCon.query(getTodoQuery, [data.bucketId], function (err, todo) {
+          if (err) {
+              console.log("Invalid data", err);
+              throw err;
+          }
+          else {
+              resolve(todo);
+          }
+      })
+  });
   },
 
   createTodo: (data, userId, dbCon) => {
     return new Promise((resolve, reject) => {
-      var insertQuery = "INSERT INTO todo (`userId`, `text`, `status`) VALUES ('" + userId + "','" + data.text + "','" + data.status + "' )";
+      var insertQuery = "INSERT INTO todo (`userId`, `text`, `status`, `bucketId`) VALUES ('" + userId + "','" + data.text + "','" + data.status + "','" + data.bucketId + "' )";
       dbCon.query(insertQuery, function (err, result) {
         console.log(err, result);
         if (err) {
