@@ -37,7 +37,7 @@ module.exports = {
       res.status(422);
       res.send({
         status: false,
-        message: "no list found"
+        message: "No Data Found"
       });
     });
   },
@@ -55,7 +55,7 @@ module.exports = {
         res.status(422);
         res.send({
           status: false,
-          message: "no list found"
+          message: "No List Found"
         });
       });
   },
@@ -63,7 +63,7 @@ module.exports = {
   updateBucket: function(req, res) {
     const userId = req.user.id;
     const data = { ...req.body };
-    BucketRepository.updateBucket(data, userId, req.app.db)
+    BucketRepository.update(data.bucketId, data)
       .then(result => {
         res.send({
           status: true,
@@ -74,7 +74,7 @@ module.exports = {
         res.status(422);
         res.send({
           status: false,
-          message: "no list found"
+          message: "No Bucket Found"
         });
       });
   }

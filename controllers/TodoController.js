@@ -75,7 +75,7 @@ module.exports = {
       .then(result => {
         res.send({
           status: true,
-          message: "todo Deleted"
+          message: "Todo Deleted"
         });
       })
       .catch(message => {
