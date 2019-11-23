@@ -1,13 +1,13 @@
 const UserRepository = require("../repositories/UserRepository");
 
 module.exports = {
-  getUser: function (userData, res) {
+  getUser: function(userData, res) {
     const { email } = userData;
     UserRepository.getUserData(email, req.app.db)
       .then(result => {
         res.send({
           status: true,
-          data:result
+          data: result
         });
       })
       .catch(message => {
@@ -18,7 +18,6 @@ module.exports = {
         });
       });
   },
-
 
   login: function(req, res) {
     const { email, password } = req.body;
@@ -40,7 +39,7 @@ module.exports = {
 
   logout: function(req, res) {
     const userId = req.user.id;
-    UserRepository.logout(userId, req.app.db)
+    UserRepository.logout(userId)
       .then(result => {
         res.send({
           status: true,
@@ -59,12 +58,14 @@ module.exports = {
   signup: function(req, res) {
     var data = req.body;
     // check whether email already exists in DB (if not then allow for signIn)
-    UserRepository.getUserData(data.email, req.app.db).then((userExist) => {
-      if(userExist.status == "No user found") {
-          UserRepository.create(data, req.app.db)
+    UserRepository.getUserData(data.email)
+      .then(resData => {
+        console.log(resData);
+        if (!resData) {
+          UserRepository.create(data)
             .then(result => {
               // logging in user after signup
-              UserRepository.login(data.email, data.password, req.app.db)
+              UserRepository.login(data.email, data.password)
                 .then(result => {
                   res.send({
                     status: true,
@@ -86,15 +87,16 @@ module.exports = {
                 message: message
               });
             });
-      } else {
-        res.send({
-          status: false,
-          message: "Email already exist in system"
-        })
-      }
-    }).catch((error) => {
-      console.log(error);
-    })
+        } else {
+          res.send({
+            status: false,
+            message: "Email already exist in system"
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   },
 
   update: function(req, res) {
@@ -102,7 +104,7 @@ module.exports = {
     var email = req.user.email;
     var data = req.body;
 
-    UserRepository.update(data, userId ,req.app.db)
+    UserRepository.update(data, userId, req.app.db)
       .then(result => {
         //sending users's updated data
         UserRepository.getUserData(email, req.app.db)

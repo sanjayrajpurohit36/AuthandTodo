@@ -1,58 +1,30 @@
-const tokenFile = require("../config/verifyToken");
+const Bucket = require("../models/BucketModel");
 
 module.exports = {
-  getBucket: (userId, dbCon) => {
-    return new Promise((resolve, reject) => {
-        var getTodoQuery = "SELECT * FROM bucket WHERE userId = ? " ;
-        dbCon.query(getTodoQuery, [userId], function (err, todo) {
-            if (err) {
-                console.log("Invalid data", err);
-                throw err;
-            }
-            else {
-                resolve(todo);
-            }
-        })
-    });
+  all: userId => {
+    console.log("userId", userId)
+    return Bucket.find({ user: userId}).populate("user", "name");
   },
 
-  createBucket: (data, userId, dbCon) => {
-    return new Promise((resolve, reject) => {
-      var insertQuery = "INSERT INTO bucket (`userId`, `bucketName`) VALUES ('" + userId + "','" + data.bucketName + "' )";
-      dbCon.query(insertQuery, function (err, result) {
-        console.log(err, result);
-        if (err) {
-            console.log("err in creating Bucket", err);
-            throw err;
-        }
-        else {
-            resolve(result);
-        }
-      })
-    });
+  find: id => {
+    return Bucket.find({ _id: id }).populate("todo");
   },
 
-  updateBucket: (data, userId, dbCon) => {
-    return new Promise((resolve, reject) => {
-        let bucketId = data.bucketId;
-        delete data.bucketId;
-        let keys = Object.keys(data);
-        // creating array of updated values
-        let values = keys.map((k) => data[k])
-        values.push(bucketId); // pushing todoId
-        values.push(userId);  // pushing userId
-        var updateQuery = "UPDATE bucket SET " + keys.map(k => `${k} = ?`).join(", ") + " WHERE bucketId = ? AND userId = ?";
-        dbCon.query(updateQuery, values,  function (err, result) {
-            console.log(err, result);
-            if (err) {
-                console.log("err in updating data", err);
-                throw err;
-            }
-            else if(result.affectedRows) {
-                resolve(result.affectedRows);
-            }
-          })  
-    });
+  create: data => {
+    var bucket = new Bucket(data);
+    return bucket.save();
+  },
+
+  update: (id, data) => {
+    return Bucket.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: { ...data }
+      }
+    );
+  },
+
+  delete: id => {
+    return Bucket.deleteOne({ _id: id });
   }
-
 };

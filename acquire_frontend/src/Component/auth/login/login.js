@@ -73,7 +73,7 @@ class Login extends React.Component {
                     <label>Email</label>
                 <input type="email" placeholder="Enter your email" id="email" onChange={this.getUserInfo} autoComplete="off"/>
                 <label>Password</label>
-                <input type="password" id="password" onChange={this.getUserInfo} autoComplete="off"/>
+                <input type="password" placeholder="Password" id="password" onChange={this.getUserInfo} autoComplete="off"/>
                 {
                     this.state.showErr ?
                     <div>Invalid Credentials</div>

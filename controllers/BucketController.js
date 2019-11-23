@@ -4,15 +4,16 @@ module.exports = {
   create: function(req, res) {
     // payload for creating Bucket
     const payload = {
-        "bucketName": req.body.bucketName       
-    } 
+      bucketName: req.body.bucketName,
+      user: req.user.id
+    };
 
-    const userId = req.user.id
-    BucketRepository.createBucket(payload, userId, req.app.db)
+    BucketRepository.create(payload)
       .then(result => {
         res.send({
-            status: true,
-            message: "Bucket is created." 
+          status: true,
+          message: "Bucket is created.",
+          bucket: result
         });
       })
       .catch(message => {
@@ -24,51 +25,57 @@ module.exports = {
       });
   },
 
-  getBucketData: function (req, res) { 
-
+  getBucketData: function(req, res) {
+    BucketRepository.find(req.params.bucketId)
+    .then(result => {
+      res.send({
+        status: true,
+        data: result
+      });
+    })
+    .catch(message => {
+      res.status(422);
+      res.send({
+        status: false,
+        message: "no list found"
+      });
+    });
   },
 
-
-  getBucketList: function (req, res) {
-    const userId  = req.user.id;
-    // const pageNo = req.params.pageNo;
-    // const limit = req.params.limit
-    // const from = pageNo * limit
-    BucketRepository.getBucket(userId, req.app.db)
-        .then(result => {
-            res.send({
-                status: true,
-                data: result
-            });
-        })
-        .catch(message => {
-            res.status(422);
-            res.send({
-                status: false,
-                message: "no list found"
-            })
-
-        })
-  },
-  
-  updateBucket: function (req, res) {
-    const userId = req.user.id; 
-    const data =  {...req.body};
-    BucketRepository.updateBucket(data, userId ,req.app.db)
-        .then(result => {
-            res.send({
-                status: true,
-                data: result
-            });
-        })
-        .catch(message => {
-            res.status(422);
-            res.send({
-                status: false,
-                message: "no list found"
-            })
-
-        })
+  getBucketList: function(req, res) {
+    const userId = req.user.id;
+    BucketRepository.all(userId)
+      .then(result => {
+        res.send({
+          status: true,
+          data: result
+        });
+      })
+      .catch(message => {
+        res.status(422);
+        res.send({
+          status: false,
+          message: "no list found"
+        });
+      });
   },
 
+  updateBucket: function(req, res) {
+    const userId = req.user.id;
+    const data = { ...req.body };
+    BucketRepository.updateBucket(data, userId, req.app.db)
+      .then(result => {
+        res.send({
+          status: true,
+          data: result
+        });
+      })
+      .catch(message => {
+        res.status(422);
+        res.send({
+          status: false,
+          message: "no list found"
+        });
+      });
+  }
 };

@@ -14,22 +14,12 @@ module.exports = {
         });
     User.find_by_token(token, req.app.db)
         .then(userData => {
-        req["user"] = { id: userData.userId, email: userData.email }
+        req["user"] = { id: userData._id, email: userData.email }
         next();
         })
         .catch(err => {
         res.status(422).send({ auth: false, message: "Need to login." });
         });
-    },
-
-    generateToken: (userData) => {
-        let token  = jwt.sign({
-            "_id" : userData.userId,
-            "email": userData.email
-        },
-            "acquire_test"
-        );
-        return token;
     }
 }
 

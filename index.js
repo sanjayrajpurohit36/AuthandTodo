@@ -1,41 +1,26 @@
 const express = require('express');
-const bodyparser = require('body-parser');
+const bodyParser = require('body-parser');
 const cors = require("cors");
 const mysql = require("mysql");
 const routes = require("./config/routes");
 // const db = require("./config/dbConfig");
+var mongoose = require("./config/dbConfig");
 
+const API_PORT = process.env.PORT || 3001;
 const app = express();
 const router = express.Router();
+
+let db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cors());
 
-// for Database
-const db = mysql.createConnection({
-    host : 'localhost',
-    user: 'root',
-    password: '', 
-    database: 'acquiredb'
-});
 
-// connect to db
-db.connect((err) => {
-    if(err) { 
-        console.log("error in connecting db at dbConfig", err);
-        throw err;
-    }
-    console.log("Db is connected!!");
-    app.db = db
-    routes(router,app.db);
-})  
+routes(router);
 
-app.use(bodyparser.urlencoded({
-    extended: true
-}));
-
-app.use(bodyparser.json());
 app.use("/api", router);
 
-
-app.listen('3000', () => {
-    console.log("Hey! my server is running at the port 3000");
-})
+app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

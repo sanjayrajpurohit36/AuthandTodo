@@ -4,17 +4,18 @@ module.exports = {
   create: function(req, res) {
     // payload for creating todos
     const payload = {
-        "text": req.body.text,
+        "title": req.body.text,
         "status": req.body.status,
-        "bucketId": req.body.bucketId         
+        "bucket": req.body.bucketId         
     } 
 
     const userId = req.user.id
-    TodoRepository.createTodo(payload, userId, req.app.db)
+    TodoRepository.create(payload, userId, req.app.db)
       .then(result => {
         res.send({
             status: true,
-            message: "Todo item is created." 
+            message: "Todo item is created.",
+            todo: result
         });
       })
       .catch(message => {
@@ -31,10 +32,7 @@ module.exports = {
     const data = {
       "bucketId" : req.params.bucketId
     } 
-    // const pageNo = req.params.pageNo;
-    // const limit = req.params.limit
-    // const from = pageNo * limit
-    TodoRepository.getTodo(data ,userId, req.app.db)
+    TodoRepository.all(data ,userId)
         .then(result => {
             res.send({
                 status: true,
@@ -54,7 +52,7 @@ module.exports = {
   updateTodoList: function (req, res) {
     const userId = req.user.id; 
     const data =  {...req.body};
-    TodoRepository.updateTodo(data, userId ,req.app.db)
+    TodoRepository.update(data.id, data)
         .then(result => {
             res.send({
                 status: true,
@@ -72,9 +70,8 @@ module.exports = {
   },
 
   deleteTodoList: function(req, res) {
-    var userId = req.user.id;
     var data = req.body.id;
-    TodoRepository.deleteTodo(data, userId, req.app.db)
+    TodoRepository.delete(data)
       .then(result => {
         res.send({
           status: true,
