@@ -12,7 +12,7 @@ module.exports = {
       .then(result => {
         res.send({
           status: true,
-          message: "Bucket is created.",
+          message: "Bucket is created successfully",
           bucket: result
         });
       })
@@ -30,6 +30,7 @@ module.exports = {
     .then(result => {
       res.send({
         status: true,
+        "message": "Bucked data fetched successfully",
         data: result
       });
     })
@@ -48,6 +49,7 @@ module.exports = {
       .then(result => {
         res.send({
           status: true,
+          message: "Bucket list fetched successfully",
           data: result
         });
       })
@@ -67,6 +69,7 @@ module.exports = {
       .then(result => {
         res.send({
           status: true,
+          message: "Bucket updated successfully",
           data: result
         });
       })

@@ -6,7 +6,8 @@ module.exports = {
     const payload = {
         "title": req.body.text,
         "status": req.body.status,
-        "bucket": req.body.bucketId         
+        "bucket": req.body.bucketId,
+        "createdBy": req.user.id         
     } 
 
     const userId = req.user.id
@@ -14,7 +15,7 @@ module.exports = {
       .then(result => {
         res.send({
             status: true,
-            message: "Todo item is created.",
+            message: "Todo item is created successfully",
             todo: result
         });
       })
@@ -36,7 +37,8 @@ module.exports = {
         .then(result => {
             res.send({
                 status: true,
-                data: result
+                message: "Todo fetched successfully",
+                data: result  
             });
         })
         .catch(message => {
@@ -50,12 +52,12 @@ module.exports = {
   },
   
   updateTodoList: function (req, res) {
-    const userId = req.user.id; 
     const data =  {...req.body};
     TodoRepository.update(data.id, data)
         .then(result => {
             res.send({
                 status: true,
+                message: "Todo updated successfully",
                 data: result
             });
         })
@@ -63,25 +65,31 @@ module.exports = {
             res.status(422);
             res.send({
                 status: false,
-                message: "no list found"
+                message: "No Todo found"
             })
 
         })
   },
 
   deleteTodoList: function(req, res) {
-    var data = req.body.id;
+    var data = {id: req.body.id, userId: req.user.id};
     TodoRepository.delete(data)
       .then(result => {
-        res.send({
-          status: true,
-          message: "Todo Deleted"
-        });
+        if(result.deletedCount)
+          res.send({
+            status: true,
+            message: "Todo deleted successfully"
+          });
+        else 
+          res.send({
+            status: true,
+            message: "No todo found"
+          });
       })
       .catch(message => {
         res.send({
           status: false,
-          message
+          message: message
         });
       });
   }

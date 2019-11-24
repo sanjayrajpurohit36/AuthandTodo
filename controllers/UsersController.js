@@ -60,7 +60,7 @@ module.exports = {
     // check whether email already exists in DB (if not then allow for signIn)
     UserRepository.getUserData(data.email)
       .then(resData => {
-        console.log(resData);
+        // console.log(resData);
         if (!resData) {
           UserRepository.create(data)
             .then(result => {

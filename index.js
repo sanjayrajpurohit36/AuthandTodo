@@ -1,9 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require("cors");
-const mysql = require("mysql");
 const routes = require("./config/routes");
-// const db = require("./config/dbConfig");
 var mongoose = require("./config/dbConfig");
 
 const API_PORT = process.env.PORT || 3001;

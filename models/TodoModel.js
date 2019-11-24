@@ -7,6 +7,10 @@ const TodoModel = new mongoose.Schema({
   bucket: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "bucket"
+  },
+  createdBy: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user"
   }
 });
 

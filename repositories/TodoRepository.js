@@ -2,8 +2,7 @@ const Todo = require("../models/TodoModel");
 
 module.exports = {
   all: (data, userId) => {
-    console.log(data, userId);
-    return Todo.find({ bucket: data.bucketId }).populate(
+    return Todo.find({ bucket: data.bucketId, createdBy: userId }).populate(
       "bucket",
       ["_id", "bucketName"],
     );
@@ -27,7 +26,7 @@ module.exports = {
     );
   },
 
-  delete: id => {
-    return Todo.deleteOne({ _id: id });
+  delete: data => {
+    return Todo.deleteOne({ _id: data.id, createdBy: data.userId });
   }
 };
