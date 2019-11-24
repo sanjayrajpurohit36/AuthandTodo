@@ -1,9 +1,16 @@
 const mongoose = require("mongoose");
 
+// schema options
+const options = {
+  timestamps: { 
+      createdAt: 'createdAt',
+      updatedAt : 'updatedAt'
+  }
+}
+
 const TodoModel = new mongoose.Schema({
   title: { type: String, required: true },
   status: { type: Boolean, required: true },
-  created_at: Date,
   bucket: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "bucket"
@@ -12,6 +19,6 @@ const TodoModel = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user"
   }
-});
+}, options);
 
 module.exports = mongoose.model("todo", TodoModel);
