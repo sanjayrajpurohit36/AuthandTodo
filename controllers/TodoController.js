@@ -4,7 +4,7 @@ module.exports = {
   create: function(req, res) {
     // payload for creating todos
     const payload = {
-        "title": req.body.text,
+        "title": req.body.title,
         "status": req.body.status,
         "bucket": req.body.bucketId,
         "createdBy": req.user.id         
